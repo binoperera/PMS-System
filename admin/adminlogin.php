@@ -1,0 +1,47 @@
+<?php
+include '../components/connect.php';
+
+if (isset($_POST['submit'])) {
+    $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+    $pass = $_POST['pass'];
+
+    $select_admins = $conn->prepare("SELECT * FROM `admins` WHERE name = ? LIMIT 1");
+    $select_admins->execute([$name]);
+    $row = $select_admins->fetch(PDO::FETCH_ASSOC);
+
+    if ($select_admins->rowCount() > 0 && password_verify($pass, $row['password'])) {
+        setcookie('admin_id', $row['id'], time() + 60*60*24*30, '/');
+        header('location:dashboard.php');
+        exit;
+    } else {
+        $warning_msg[] = 'Incorrect username or password!';
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Admin Login</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+   <link rel="stylesheet" href="../css/admin_style.css">
+</head>
+<body style="padding-left: 0;">
+<section class="form-container" style="min-height: 100vh;">
+   <form action="" method="POST">
+      <h3>Welcome Admins to the System</h3>
+      <input type="text" name="name" placeholder="Enter Username" maxlength="20" class="box" required oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="pass" placeholder="Enter Password" maxlength="20" class="box" required oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="submit" value="login now" name="submit" class="btn">
+      <!-- <p>Or</p> -->
+      <!-- <a href="../sso_login.php?role=admin" class="btn google-btn"><i class="fab fa-google"></i> Login with Google</a> -->
+   </form>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<?php include '../components/message.php'; ?>
+</body>
+</html>
