@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot</title>
+    <link rel="stylesheet" href="style.css">  <!-- Link to the CSS file -->
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chatbox"></div>
+        <input type="text" id="message" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+
+        // Load problems and solutions from JSON
+        let problemsSolutions = [];
+
+        fetch('solution.json')
+            .then(response => response.json())
+            .then(data => {
+                problemsSolutions = data.problems;
+            });
+
+        function sendMessage() {
+            let message = document.getElementById('message').value;
+            if (!message) return;
+
+            // Display user's message
+            chatbox.innerHTML += `<p><b>You:</b> ${message}</p>`;
+            
+            // Find the solution based on the word match
+            let response = 'Sorry, I did not understand that.';
+            
+            // Split the message into individual words
+            const wordsInMessage = message.toLowerCase().split(/\s+/);
+            
+            // Check if any word in the message matches a problem
+            for (let word of wordsInMessage) {
+                for (let problemSolution of problemsSolutions) {
+                    if (problemSolution.problem.toLowerCase().includes(word)) {
+                        response = problemSolution.solution;
+                        break;
+                    }
+                }
+                if (response !== 'Sorry, I did not understand that.') break; // Exit once a match is found
+            }
+
+            chatbox.innerHTML += `<p><b>Chatbot:</b> ${response}</p>`;
+
+            // Scroll to the latest message
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            // Clear the input field
+            document.getElementById('message').value = '';
+        }
+
+        // Auto load initial greeting message
+        window.onload = function() {
+            chatbox.innerHTML = '<p><b>Chatbot:</b> Hello! How can I help you today?</p>';
+        };
+    </script>
+</body>
+</html>

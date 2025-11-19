@@ -1,0 +1,21 @@
+{
+    "problems": [
+      {
+        "problem": "register",
+        "solution": "To register a new user, log in as an admin, go to 'UserManagement' section, click 'Add New User', and fill in the details like name, contact, and room preferences. Then, click 'Submit'."
+      },
+      {
+        "problem": "payment",
+        "solution": "To check a boarder's payment history, contact admin for check all the past payments."
+      },
+      {
+        "problem": "room",
+        "solution": "To add a new facility, go to 'Post Property',and enter the details like room type, amenities, and pricing. Then, save the room."
+      },
+      {
+        "problem": "check out",
+        "solution": "To process early check-out, open the boarder's profile, click 'Process Early Check-out', adjust billing if necessary, and finalize the check-out."
+      }
+    ]
+  }
+  
